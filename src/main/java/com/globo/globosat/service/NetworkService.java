@@ -4,17 +4,13 @@ import com.globo.globosat.model.Collision;
 import com.globo.globosat.model.Network;
 import com.globo.globosat.repository.FileRepository;
 import com.globo.globosat.repository.NetworkRepository;
+import com.globo.globosat.service.strategy.factory.NetworkArrangeFactory;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-
-import static java.lang.Boolean.logicalAnd;
-import static java.util.Arrays.asList;
 
 /**
  * Created by raphael on 17/12/16.
@@ -28,6 +24,9 @@ public class NetworkService {
 
     @Autowired
     private NetworkRepository netRepo;
+
+    @Autowired
+    NetworkArrangeFactory factory;
 
     @PostConstruct
     public void init(){
@@ -44,43 +43,7 @@ public class NetworkService {
      * @param collision
      */
     public Network arrangeInNetwork(Collision collision) {
-        List<Network> networks = netRepo.findAll();
-
-        if (networks.isEmpty()){
-            return netRepo.save(new Network(new ArrayList<>(asList(collision))));
-        }
-        else if(isCollisionBelongToSameNetwork(collision)){
-            return netRepo.getNetworkOf(collision).map(network -> {
-                network.addCollision(collision);
-                return netRepo.save(network);
-            }).orElseThrow(IllegalStateException::new);
-        }else{
-            Optional<Network> netA = netRepo.getNetworkOf(collision.getLeft());
-            Optional<Network> netB = netRepo.getNetworkOf(collision.getRight());
-
-            if(logicalAnd(netA.isPresent(), netB.isPresent())){
-                Network network = netA.get();
-                network.addCollision(collision);
-                netB.get().getCollisions().forEach(c -> network.addCollision(c));
-                netRepo.remove(netB.get().getId());
-                return netRepo.save(network);
-            }
-            if(logicalAnd(!netA.isPresent(), netB.isPresent())){
-                Network network = netB.get();
-                network.addCollision(collision);
-                return netRepo.save(network);
-            }
-            if(logicalAnd(netA.isPresent(), !netB.isPresent())){
-                Network network = netA.get();
-                network.addCollision(collision);
-                return netRepo.save(network);
-            }
-            if(logicalAnd(!netA.isPresent(), !netB.isPresent())){
-                return netRepo.save(new Network(new ArrayList<>(asList(collision))));
-            }
-        }
-
-        throw new IllegalStateException();
+        return factory.getArrangeStrategy(collision).arrange(collision);
     }
 
     /**
@@ -89,7 +52,7 @@ public class NetworkService {
      * @return
      */
     public boolean isCollisionBelongToSameNetwork(Collision collision) {
-        return netRepo.getNetworkOf(collision).isPresent();
+        return netRepo.isCollisionBelongToSameNetwork(collision);
     }
 
     public Network getNetwork(String id) {

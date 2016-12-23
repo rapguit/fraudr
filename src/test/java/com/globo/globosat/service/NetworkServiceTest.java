@@ -5,6 +5,7 @@ import com.globo.globosat.model.Network;
 import com.globo.globosat.model.Node;
 import com.globo.globosat.repository.FileRepository;
 import com.globo.globosat.repository.NetworkRepository;
+import com.globo.globosat.service.strategy.factory.NetworkArrangeFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,13 +25,15 @@ public class NetworkServiceTest {
 
     private FileRepository fileRepo;
     private NetworkRepository netRepo;
+    private NetworkArrangeFactory factory;
     private NetworkService service;
 
     @Before
     public void setUp() throws Exception {
-        fileRepo = mock(FileRepository.class);
         netRepo = new NetworkRepository();
         netRepo.init();
+        factory = new NetworkArrangeFactory(netRepo);
+        fileRepo = mock(FileRepository.class);
 
         List<Collision> collisions = new ArrayList<>();
         collisions.add(new Collision(new Node("A"), new Node("B")));
@@ -38,7 +41,7 @@ public class NetworkServiceTest {
 
         when(fileRepo.loadCollisionsFromFile()).thenReturn(collisions);
 
-        service = new NetworkService(fileRepo, netRepo);
+        service = new NetworkService(fileRepo, netRepo, factory);
         service.init();
     }
 
@@ -137,7 +140,8 @@ public class NetworkServiceTest {
     @Test
     public void must_find_all_networks() throws Exception {
         NetworkRepository netRepo = mock(NetworkRepository.class);
-        service = new NetworkService(fileRepo, netRepo);
+        NetworkArrangeFactory factory = mock(NetworkArrangeFactory.class);
+        service = new NetworkService(fileRepo, netRepo, factory);
 
         service.getAllNetworks();
 
@@ -147,7 +151,8 @@ public class NetworkServiceTest {
     @Test
     public void must_find_a_network() throws Exception {
         NetworkRepository netRepo = mock(NetworkRepository.class);
-        service = new NetworkService(fileRepo, netRepo);
+        NetworkArrangeFactory factory = mock(NetworkArrangeFactory.class);
+        service = new NetworkService(fileRepo, netRepo, factory);
 
         service.getNetwork("123");
 

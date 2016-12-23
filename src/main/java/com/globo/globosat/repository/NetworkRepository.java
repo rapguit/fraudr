@@ -91,4 +91,8 @@ public class NetworkRepository {
     public Network findById(String id) {
         return Optional.ofNullable(networks.get(id)).orElseThrow(NetworkNotFoundException::new);
     }
+
+    public boolean isCollisionBelongToSameNetwork(Collision collision) {
+        return getNetworkOf(collision).isPresent();
+    }
 }

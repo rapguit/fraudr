@@ -3,6 +3,7 @@ package com.globo.globosat.service.strategy.factory;
 import com.globo.globosat.model.Collision;
 import com.globo.globosat.model.Network;
 import com.globo.globosat.model.Node;
+import com.globo.globosat.model.vo.CollisionCheck;
 import com.globo.globosat.repository.NetworkRepository;
 import com.globo.globosat.service.strategy.ArrangeInNetwork;
 import com.globo.globosat.service.strategy.ArrangeInFirstNetwork;
@@ -39,7 +40,7 @@ public class NetworkArrangeFactoryTest {
     @Test
     public void should_get_same_network_arrange_strategy() throws Exception {
         when(netRepo.findAll()).thenReturn(asList(new Network()));
-        when(netRepo.isCollisionBelongToSameNetwork(Matchers.any(Collision.class))).thenReturn(true);
+        when(netRepo.isCollisionBelongToSameNetwork(Matchers.any(Collision.class))).thenReturn(new CollisionCheck(true, "123"));
 
         NetworkArrangeStrategy arrangeStrategy = factory.getArrangeStrategy(new Collision(new Node("A"), new Node("B")));
 
@@ -49,7 +50,7 @@ public class NetworkArrangeFactoryTest {
     @Test
     public void should_get_default_network_arrange_strategy() throws Exception {
         when(netRepo.findAll()).thenReturn(asList(new Network()));
-        when(netRepo.isCollisionBelongToSameNetwork(Matchers.any(Collision.class))).thenReturn(false);
+        when(netRepo.isCollisionBelongToSameNetwork(Matchers.any(Collision.class))).thenReturn(new CollisionCheck(false, ""));
 
         NetworkArrangeStrategy arrangeStrategy = factory.getArrangeStrategy(new Collision(new Node("A"), new Node("B")));
 

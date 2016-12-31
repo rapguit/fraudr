@@ -2,6 +2,7 @@ package com.globo.globosat.service;
 
 import com.globo.globosat.model.Collision;
 import com.globo.globosat.model.Network;
+import com.globo.globosat.model.vo.CollisionCheck;
 import com.globo.globosat.repository.FileRepository;
 import com.globo.globosat.repository.NetworkRepository;
 import com.globo.globosat.service.strategy.factory.NetworkArrangeFactory;
@@ -51,7 +52,7 @@ public class NetworkService {
      * @param collision
      * @return
      */
-    public boolean isCollisionBelongToSameNetwork(Collision collision) {
+    public CollisionCheck isCollisionBelongToSameNetwork(Collision collision) {
         return netRepo.isCollisionBelongToSameNetwork(collision);
     }
 

@@ -4,6 +4,7 @@ import com.globo.globosat.exception.NetworkNotFoundException;
 import com.globo.globosat.model.Collision;
 import com.globo.globosat.model.Network;
 import com.globo.globosat.model.Node;
+import com.globo.globosat.model.vo.CollisionCheck;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
@@ -92,7 +93,9 @@ public class NetworkRepository {
         return Optional.ofNullable(networks.get(id)).orElseThrow(NetworkNotFoundException::new);
     }
 
-    public boolean isCollisionBelongToSameNetwork(Collision collision) {
-        return getNetworkOf(collision).isPresent();
+    public CollisionCheck isCollisionBelongToSameNetwork(Collision collision) {
+        return getNetworkOf(collision)
+                .map(net -> new CollisionCheck(true, net.getId()))
+                .orElse(new CollisionCheck(false, ""));
     }
 }

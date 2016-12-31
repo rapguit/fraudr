@@ -3,6 +3,7 @@ package com.globo.globosat.controller;
 import com.globo.globosat.controller.dto.CollisionDTO;
 import com.globo.globosat.model.Collision;
 import com.globo.globosat.model.Network;
+import com.globo.globosat.model.vo.CollisionCheck;
 import com.globo.globosat.service.NetworkService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -62,12 +63,13 @@ public class FraudrControllerTest {
 
     @Test
     public void must_check_collision_belongs_to_a_network() throws Exception {
-        when(service.isCollisionBelongToSameNetwork(any(Collision.class))).thenReturn(true);
-        Boolean resp = controller.checkCollision(mock(CollisionDTO.class));
+        when(service.isCollisionBelongToSameNetwork(any(Collision.class))).thenReturn(new CollisionCheck(true, "123"));
+        CollisionCheck resp = controller.checkCollision(mock(CollisionDTO.class));
 
         verify(service, only()).isCollisionBelongToSameNetwork(any(Collision.class));
 
-        assertThat(resp, is(true));
+        assertThat(resp.isBelongsToNetwork(), is(true));
+        assertThat(resp.getNetworkId(), equalTo("123"));
     }
 
 }

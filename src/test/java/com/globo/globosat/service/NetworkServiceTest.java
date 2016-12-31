@@ -118,11 +118,11 @@ public class NetworkServiceTest {
     public void collision_belong_to_same_network() throws Exception {
         boolean collisionBelongToSameNetworkA = service.isCollisionBelongToSameNetwork(
                     new Collision(new Node("A"), new Node("B")
-                ));
+                )).isBelongsToNetwork();
 
         boolean collisionBelongToSameNetworkB = service.isCollisionBelongToSameNetwork(
                     new Collision(new Node("Y"), new Node("X")
-                ));
+                )).isBelongsToNetwork();
 
         assertThat(collisionBelongToSameNetworkA, is(true));
         assertThat(collisionBelongToSameNetworkB, is(true));
@@ -132,7 +132,7 @@ public class NetworkServiceTest {
     public void collision_not_belong_to_same_network() throws Exception {
         boolean collisionBelongToSameNetwork = service.isCollisionBelongToSameNetwork(
                     new Collision(new Node("A"), new Node("Y")
-                ));
+                )).isBelongsToNetwork();
 
         assertThat(collisionBelongToSameNetwork, is(false));
     }

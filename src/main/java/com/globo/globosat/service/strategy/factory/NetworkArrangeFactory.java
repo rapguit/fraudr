@@ -27,7 +27,7 @@ public class NetworkArrangeFactory {
             return new ArrangeInFirstNetwork(netRepo);
         }
 
-        if(netRepo.isCollisionBelongToSameNetwork(collision)){
+        if(netRepo.isCollisionBelongToSameNetwork(collision).isBelongsToNetwork()){
             return new ArrangeInSameNetwork(netRepo);
         }
 

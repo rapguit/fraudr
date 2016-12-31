@@ -3,6 +3,7 @@ package com.globo.globosat.controller;
 import com.globo.globosat.controller.dto.CollisionDTO;
 import com.globo.globosat.model.Collision;
 import com.globo.globosat.model.Network;
+import com.globo.globosat.model.vo.CollisionCheck;
 import com.globo.globosat.service.NetworkService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -45,7 +46,7 @@ public class FraudrController {
     }
 
     @RequestMapping(path = "collision", method = RequestMethod.POST)
-    public Boolean checkCollision(@Valid @RequestBody final CollisionDTO collision) {
+    public CollisionCheck checkCollision(@Valid @RequestBody final CollisionDTO collision) {
         return service.isCollisionBelongToSameNetwork(new Collision(collision));
     }
 

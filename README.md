@@ -1,4 +1,3 @@
 # fraudr
 
-How to on:
-https://rapguit.github.io/fraudr/
+API Guide :https://rapguit.github.io/fraudr/api-guide.html
